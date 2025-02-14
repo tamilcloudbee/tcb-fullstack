@@ -1,6 +1,6 @@
 resource "aws_eip" "nat_eip" {
   count = var.create_nat_gateway ? 1 : 0
-  vpc   = true
+  domain   = "vpc"
 
   tags = {
     Name = "${var.resource_prefix}-nat-eip-${var.env_name}"
