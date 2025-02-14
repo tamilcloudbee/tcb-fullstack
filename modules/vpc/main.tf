@@ -16,7 +16,7 @@ resource "aws_subnet" "public_subnet_1" {
   }
 }
 
-/*
+
 # Public Subnet 2 (Now using a custom route table)
 resource "aws_subnet" "public_subnet_2" {
   vpc_id                  = aws_vpc.vpc.id
@@ -27,7 +27,7 @@ resource "aws_subnet" "public_subnet_2" {
     Name = "${var.resource_prefix}-public-subnet-2-${var.env_name}-us-east-1"  }
 }
 
-*/
+
 
 # Private Subnet 1 (Using a custom route table, but no Internet Gateway route)
 resource "aws_subnet" "private_subnet_1" {
@@ -39,7 +39,7 @@ resource "aws_subnet" "private_subnet_1" {
   }
 }
 
-/*
+
 
 # Private Subnet 2 (Using a custom route table, but no Internet Gateway route)
 resource "aws_subnet" "private_subnet_2" {
@@ -51,7 +51,7 @@ resource "aws_subnet" "private_subnet_2" {
   }
 }
 
-*/
+
 
 # Internet Gateway (For Public Subnet Access)
 resource "aws_internet_gateway" "igw" {
