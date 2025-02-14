@@ -33,7 +33,7 @@ resource "aws_subnet" "public_subnet_2" {
 resource "aws_subnet" "private_subnet_1" {
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = var.private_cidr_1
-  availability_zone = "us-east-1a"
+  availability_zone = "us-east-1c"
   tags = {
     Name = "${var.resource_prefix}-private-subnet-1-${var.env_name}-us-east-1"
   }
@@ -45,7 +45,7 @@ resource "aws_subnet" "private_subnet_1" {
 resource "aws_subnet" "private_subnet_2" {
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = var.private_cidr_2
-  availability_zone = "us-east-1b"
+  availability_zone = "us-east-1d"
   tags = {
     Name = "${var.resource_prefix}-private-subnet-2-${var.env_name}-us-east-1"
   }
@@ -111,12 +111,12 @@ resource "aws_route_table_association" "public_association_1" {
   route_table_id = aws_route_table.public_route_table.id
 }
 
-/*
+
 resource "aws_route_table_association" "public_association_2" {
   subnet_id      = aws_subnet.public_subnet_2.id
   route_table_id = aws_route_table.public_route_table.id
 }
-*/
+
 
 # Create a custom route table for the private subnets (No Internet Gateway route)
 resource "aws_route_table" "private_route_table" {
@@ -125,3 +125,16 @@ resource "aws_route_table" "private_route_table" {
     Name = "${var.resource_prefix}-vpc-${var.env_name}-private-rt"
   }
 }
+
+# Associate the private subnets with the custom private route table
+resource "aws_route_table_association" "private_association_1" {
+  subnet_id      = aws_subnet.private_subnet_1.id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
+resource "aws_route_table_association" "private_association_2" {
+  subnet_id      = aws_subnet.private_subnet_2.id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
+

@@ -53,3 +53,11 @@ module "vpc_a" {
   resource_prefix = var.resource_prefix
 
 }
+
+module "nat_gateway" {
+  source                 = "./modules/nat_gateway"
+  public_subnet_id       = module.vpc_a.public_subnet_1_id
+  private_routetable_id = module.vpc_a.private_routetable_id
+  resource_prefix        = var.resource_prefix
+  env_name               = "dev_a"
+}
