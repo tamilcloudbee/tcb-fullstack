@@ -15,5 +15,4 @@ resource_prefix = "tcb-fullstack-app"
 
 #key_name = "linux-alb"
 
-common_egress_rules = [ { from_port = 0, to_port = 0, protocol = "-1", cidr_blocks = ["0.0.0.0/0"] }
-]
+# common_egress_rules = [ { from_port = 0, to_port = 0, protocol = "-1", cidr_blocks = ["0.0.0.0/0"] } ]
