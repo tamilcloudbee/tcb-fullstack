@@ -41,3 +41,15 @@ module "route53" {
   cloudfront_hosted_zone_id = module.cloudfront.cloudfront_hosted_zone_id
 }
 
+module "vpc_a" {
+  source          = "./modules/vpc"
+  vpc_cidr        = var.vpc_cidr
+  public_cidr_1   = var.public_cidr_1
+  private_cidr_1  = var.private_cidr_1
+  public_cidr_2   = var.public_cidr_2
+  private_cidr_2  = var.private_cidr_2
+
+  env_name        = "dev_a"
+  resource_prefix = var.resource_prefix
+
+}

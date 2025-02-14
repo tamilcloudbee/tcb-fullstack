@@ -1,19 +1,4 @@
-variable "aws_region" {
-  default = "us-east-1"
-}
-
-variable "bucket_name" {
-  default = "yourdomain-static-site"
-}
-
-variable "domain" {
-  default = "yourdomain.com"
-}
-
-variable "vpc_cidr" {
-  description = "CIDR block for the VPC"
-  type        = string
-}
+variable "vpc_cidr" {}
 
 variable "public_cidr_1" {
   description = "CIDR block for the first public subnet"
@@ -24,7 +9,6 @@ variable "private_cidr_1" {
   description = "CIDR block for the first private subnet"
   type        = string
 }
-
 
 
 variable "public_cidr_2" {
@@ -38,15 +22,10 @@ variable "private_cidr_2" {
   type        = string
 }
 
-/*
-variable "key_name" {
-  description = "Key for EC@ instance"
-  type        = string
-}
-*/
+variable "env_name" {}
 
 variable "resource_prefix" {
   description = "Prefix for all resources"
   type        = string
-  
+  default     = "demo_nlb_"
 }
