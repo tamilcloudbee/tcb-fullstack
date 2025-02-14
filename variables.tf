@@ -38,7 +38,15 @@ variable "private_cidr_2" {
   type        = string
 }
 
+/*
 variable "key_name" {
   description = "Key for EC@ instance"
   type        = string
+}
+*/
+
+variable "resource_prefix" {
+  description = "Prefix for all resources"
+  type        = string
+  
 }
