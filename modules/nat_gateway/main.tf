@@ -21,7 +21,7 @@ resource "aws_nat_gateway" "nat_gw" {
 
 resource "aws_route" "private_subnet_route" {
   count                  = var.create_nat_gateway ? 1 : 0
-  route_table_id         = var.private_route_table_id
+  route_table_id         = var.private_routetable_id
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.nat_gw[0].id
 

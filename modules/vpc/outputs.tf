@@ -25,6 +25,11 @@ output "private_subnet_2_id" {
   value       = aws_subnet.private_subnet_2.id
 }
 
+output "private_routetable_id" {
+  description = "The ID of the second private subnet"
+  value       = aws_route_table.private_route_table.id
+}
+
 
 
 output "internet_gateway_id" {

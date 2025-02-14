@@ -55,9 +55,9 @@ module "vpc_a" {
 }
 
 module "nat_gateway" {
-  source               = "./modules/nat_gateway"
-  public_subnet_id     = module.vpc_a.public_subnet_1_id
-  private_route_table_id = module.vpc_a.private_route_table_id
-  resource_prefix      = var.resource_prefix
-  env_name             = "dev_a"
+  source                 = "./modules/nat_gateway"
+  public_subnet_id       = module.vpc_a.public_subnet_1_id
+  private_route_table_id = module.vpc_a.private_routetable_id
+  resource_prefix        = var.resource_prefix
+  env_name               = "dev_a"
 }

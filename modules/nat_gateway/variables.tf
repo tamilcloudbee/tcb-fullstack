@@ -9,7 +9,7 @@ variable "public_subnet_id" {
   type        = string
 }
 
-variable "private_route_table_id" {
+variable "private_routetable_id" {
   description = "The ID of the private route table to associate with the NAT Gateway"
   type        = string
 }
