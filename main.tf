@@ -61,3 +61,33 @@ module "nat_gateway" {
   resource_prefix        = var.resource_prefix
   env_name               = "dev_a"
 }
+
+module "sg_a" {
+  source   = "./modules/security_group"
+  vpc_id   = module.vpc_a.vpc_id
+  env_name = "dev_a"
+  resource_prefix = var.resource_prefix
+}
+
+module "ec2_a" {
+  source              = "./modules/ec2"
+  instance_type       = "t2.micro"
+  private_subnet_id   = module.vpc_a.private_subnet_1_id
+  user_data           = file("userdata-apache-fastapi-mysql-fullstack.sh")
+  key_name            = var.key_name
+  env_name            = "dev_a"
+  security_group_id   = module.sg_a.ec2_security_group_id
+  resource_prefix     = var.resource_prefix
+}
+
+
+module "rds" {
+  source               = "./modules/rds"
+  vpc_id               = module.vpc_a.vpc_id
+  private_subnet_id_1  = module.vpc_a.private_subnet_1_id
+  rds_security_group_id = module.sg_a.rds_mysqldb_security_group_id
+  db_name              = var.db_name
+  db_admin_user        = var.db_admin_user
+  db_admin_password    = var.db_admin_password
+  resource_prefix      = var.resource_prefix
+}

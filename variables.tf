@@ -50,3 +50,22 @@ variable "resource_prefix" {
   type        = string
   
 }
+
+variable "db_name" {
+  description = "RDS DB name"
+  type        = string
+  
+}
+
+variable "db_admin_user" {
+  description = "RDS DB Admin Username"
+  type        = string
+
+}
+
+variable "db_admin_password" {
+  description = "RDS DB admin password"
+  type        = string
+
+}
+
