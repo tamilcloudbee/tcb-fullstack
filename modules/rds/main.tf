@@ -14,10 +14,10 @@ resource "aws_db_instance" "rds-db" {
   instance_class       = "db.t3.micro"
   storage_type         = "gp2"
   allocated_storage    = 20
-  vpc_security_group_ids = [rds_security_group_id]
+  vpc_security_group_ids = [var.rds_security_group_id]
   username             = var.db_admin_user
   password             = var.db_admin_password
-  pulicly_accessible   = false 
+  publicly_accessible   = false 
   skip_final_snapshot  = true
 
   tags = {

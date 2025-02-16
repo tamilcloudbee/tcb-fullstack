@@ -73,7 +73,7 @@ module "ec2_a" {
   source              = "./modules/ec2"
   instance_type       = "t2.micro"
   private_subnet_id   = module.vpc_a.private_subnet_1_id
-  user_data           = file("userdata-apache-fastapi-mysql-fullstack.sh")
+  user_data           = file("userdata-fastapi.sh")
   key_name            = var.key_name
   env_name            = "dev_a"
   security_group_id   = module.sg_a.ec2_security_group_id
