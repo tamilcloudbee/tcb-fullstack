@@ -87,7 +87,7 @@ module "rds" {
   private_subnet_id_1  = module.vpc_a.private_subnet_1_id
   rds_security_group_id = module.sg_a.rds_mysqldb_security_group_id
   db_name              = var.db_name
-  db_admin_user        = var.db_admin_user
-  db_admin_password    = var.db_admin_password
+  username             = var.db_admin_username
+  password    = var.db_admin_password
   resource_prefix      = var.resource_prefix
 }
