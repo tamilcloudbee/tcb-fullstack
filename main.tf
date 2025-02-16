@@ -90,3 +90,9 @@ module "rds" {
   db_admin_password    = var.db_admin_password
   resource_prefix      = var.resource_prefix
 }
+
+module "ssm_parameter" {
+  source        = "./modules/ssm_parameter"
+  db_password   = var.db_admin_password
+  resource_prefix = var.resource_prefix
+}
