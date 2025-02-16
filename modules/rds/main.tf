@@ -17,7 +17,7 @@ resource "aws_db_instance" "rds-db" {
   vpc_security_group_ids = [var.rds_security_group_id]
   username             = var.db_admin_user
   password             = var.db_admin_password
-  pulicly_accessible   = false 
+  publicly_accessible   = false 
   skip_final_snapshot  = true
 
   tags = {
