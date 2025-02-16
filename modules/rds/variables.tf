@@ -26,3 +26,7 @@ variable "rds_security_group_id" {
   type        = string
 }
 
+variable "resource_prefix" {
+  description = "Prefix for the resources"
+  type        = string
+}
