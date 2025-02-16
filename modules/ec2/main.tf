@@ -35,7 +35,7 @@ resource "aws_instance" "public_instance" {
   security_groups = [var.security_group_id]
   user_data              = var.user_data  # Pass the user data here
   tags = {
-    Name        = "${var.resource_prefix}-Private-Instance-${var.public_subnet_id}"
+    Name        = "${var.resource_prefix}-Private-Instance-FastAPI"
     Environment = var.env_name
   }
 }
