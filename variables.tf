@@ -57,7 +57,7 @@ variable "db_name" {
   
 }
 
-variable "db_admin_username" {
+variable "db_admin_user" {
   description = "RDS DB Admin Username"
   type        = string
 
