@@ -25,7 +25,7 @@ data "aws_ami" "latest_ubuntu" {
 
 
 
-# EC2 Instance in the Public Subnet
+# EC2 Instance in the Private Subnet
 resource "aws_instance" "public_instance" {
   ami           = data.aws_ami.latest_ubuntu.id
   instance_type = var.instance_type
@@ -35,7 +35,7 @@ resource "aws_instance" "public_instance" {
   security_groups = [var.security_group_id]
   user_data              = var.user_data  # Pass the user data here
   tags = {
-    Name        = "${var.resource_prefix}-Public-Instance-${var.public_subnet_id}"
+    Name        = "${var.resource_prefix}-Private-Instance-${var.public_subnet_id}"
     Environment = var.env_name
   }
 }
