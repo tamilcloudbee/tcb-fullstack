@@ -188,7 +188,6 @@ module "lambda_function" {
   s3_bucket = module.lambda_s3_bucket.bucket_name
   s3_key    = "lambda_function.zip"
 
-  depends_on = [module.rds]  # Ensure RDS is provisioned before Lambda is deployed
 
 }
 
