@@ -1,3 +1,10 @@
+variable "aws_region" {
+  description = "AWS region for the Lambda function"
+  type        = string
+  default     = "us-east-1"  # Or set to your preferred region
+}
+
+
 variable "function_name" {
   description = "Name of the Lambda function"
   type        = string

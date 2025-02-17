@@ -140,6 +140,8 @@ module "lambda_function" {
     DB_PASSWORD_PARAM = module.ssm_parameter.mysql_db_password_parameter_name
   }
   # Pass the zip file and source code hash
-  zip_file         = data.http.lambda_function_zip.body
-  source_code_hash = base64sha256(data.http.lambda_function_zip.body)
+  # Use response_body instead of deprecated 'body'
+  zip_file         = data.http.lambda_function_zip.response_body
+  source_code_hash = base64sha256(data.http.lambda_function_zip.response_body)
+
 }
