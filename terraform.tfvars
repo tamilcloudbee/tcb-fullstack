@@ -1,7 +1,7 @@
 aws_region = "us-east-1"
 
 domain = "REPLACE-WITH-DOMAIN-VALUE"
-bucket_name = "DOMAIN-VALUE-static-site"
+bucket_name = "DOMAIN-VALUE-static-site-fs"
 
 vpc_cidr = "172.16.0.0/16"
 
