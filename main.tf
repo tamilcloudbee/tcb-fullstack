@@ -85,6 +85,7 @@ module "ec2_a" {
 module "rds" {
   source               = "./modules/rds"
   private_subnet_id_1  = module.vpc_a.private_subnet_1_id
+  private_subnet_id_2  = module.vpc_a.private_subnet_2_id
   rds_security_group_id = module.sg_a.rds_mysqldb_security_group_id
   db_name              = var.db_name
   db_admin_user        = var.db_admin_user
