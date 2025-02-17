@@ -10,7 +10,7 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 resource "aws_db_instance" "rds-db" {
   db_name              = var.db_name
   engine               = "mysql"
-  engine_version       = "8.0"
+  engine_version       = "8.4.4"
   instance_class       = "db.t3.micro"
   storage_type         = "gp2"
   allocated_storage    = 20
