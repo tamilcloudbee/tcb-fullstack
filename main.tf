@@ -81,6 +81,7 @@ module "ec2_a" {
 }
 
 
+
 module "rds" {
   source               = "./modules/rds"
   private_subnet_id_1  = module.vpc_a.private_subnet_1_id
@@ -96,3 +97,38 @@ module "ssm_parameter" {
   db_password   = var.db_admin_password
   resource_prefix = var.resource_prefix
 }
+
+module "lambda_iam_role" {
+  source = "./modules/iam"  # Path to the IAM module
+
+  role_name    = "${var.resource_prefix}-lambda-role"
+  policy_name  = "${var.resource_prefix}-lambda-policy"
+  policy_document = jsonencode({
+    Version = "2012-10-17"  # IAM policy version date
+    Statement = [
+      {
+        Action = [
+          "ssm:GetParameter",  # Permission to get parameters from AWS SSM Parameter Store
+          "logs:CreateLogGroup",  # Permission to create a CloudWatch log group
+          "logs:CreateLogStream",  # Permission to create a CloudWatch log stream
+          "logs:PutLogEvents",  # Permission to send log events to CloudWatch
+          "rds:DescribeDBInstances",  # Permission to describe RDS DB instances
+          "rds:Connect"  # Permission to connect to RDS (MySQL)
+        ]
+        Effect   = "Allow"
+        Resource = "*"  # Applies to all resources
+      },
+      {
+        Action = [
+          "rds:DescribeDBInstances",  # This allows you to describe your DB instances
+          "rds:Connect"  # Connect permission for RDS MySQL
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+
+
