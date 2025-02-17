@@ -15,7 +15,7 @@ resource_prefix = "tcb-fullstack-app"
 
 db_name = "tcbmysqldb"
 db_admin_user = "tcb_admin"
-db_admin_password = "Tcb@2025"
+db_admin_password = "Tcb#2025"
 
 
 key_name = "linux-alb"
