@@ -80,11 +80,6 @@ module "ec2_a" {
   resource_prefix     = var.resource_prefix
 }
 
-module "lambda_s3_bucket" {
-  source      = "./modules/s3"
-  bucket_name = "${var.resource_prefix}-lambda-bucket"
-}
-
 
 
 module "rds" {
@@ -149,11 +144,11 @@ module "lambda_function" {
   }
   # Pass the zip file and source code hash
   # Use response_body instead of deprecated 'body'
-  zip_file         = data.http.lambda_function_zip.response_body
-  source_code_hash = base64sha256(data.http.lambda_function_zip.response_body)
+  zip_file         = "lambda_function.zip"
+  source_code_hash = base64sha256(file("lambda_function.zip"))
 
 }
-*/
+
 
 
 # Download the Lambda zip file and upload to S3
@@ -183,9 +178,11 @@ module "lambda_function" {
     DB_USER           = var.db_admin_user
     DB_PASSWORD_PARAM = module.ssm_parameter.mysql_db_password_parameter_name
   }
-
+  
+  zip_file = "lambda_function.zip"
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   # Correct arguments for Lambda function using the S3 bucket
-  s3_bucket = module.lambda_s3_bucket.bucket_name
+  s3_bucket = module.lambda_s3_bucket.lambda_bucket_name
   s3_key    = "lambda_function.zip"  # Ensure the correct S3 key
 
 }
@@ -212,3 +209,4 @@ resource "aws_lambda_invocation" "invoke_lambda" {
 
   depends_on = [null_resource.wait_for_lambda]  # Ensure Lambda is deployed and waited upon before triggering
 }
+*/

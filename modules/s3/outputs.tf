@@ -21,3 +21,5 @@ output "oai_iam_arn" {
 output "oai_id" {
   value = aws_cloudfront_origin_access_identity.oai.id
 }
+
+
