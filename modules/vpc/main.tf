@@ -88,7 +88,7 @@ resource "null_resource" "tag_main_route_table" {
 
   provisioner "local-exec" {
     command = <<EOT
-      aws ec2 create-tags --resources ${data.aws_route_table.default_main_rt.id} --tags Key=Name,Value=${var.resource_prefix}vpc_${var.env_name}_main_public_rt
+      aws ec2 create-tags --resources ${data.aws_route_table.default_main_rt.id} --tags Key=Name,Value=${var.resource_prefix}-vpc-${var.env_name}-main-internal-rt
     EOT
   }
 
