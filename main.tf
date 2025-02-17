@@ -96,3 +96,42 @@ module "ssm_parameter" {
   db_password   = var.db_admin_password
   resource_prefix = var.resource_prefix
 }
+
+module "lambda_iam_role" {
+  source = "./modules/iam"
+
+  role_name    = "${var.resource_prefix}-lambda-role"
+  policy_name  = "${var.resource_prefix}-lambda-policy"
+  policy_document = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ssm:GetParameter",
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+module "lambda_function" {
+  source = "./modules/lambda"
+
+  function_name = "${var.resource_prefix}-rds-init"
+  runtime       = "python3.8"
+  handler       = "lambda_function.lambda_handler"
+  source_repo   = "https://github.com/tamilcloudbee/tcb-mysql-rds-init.git"
+  role_arn      = module.lambda_iam_role.this.arn
+
+  environment_variables = {
+    DB_HOST           = module.rds.rds_db_endpoint
+    DB_NAME           = var.db_name
+    DB_USER           = var.db_admin_user
+    DB_PASSWORD_PARAM = module.ssm_parameter.mysql_db_password_parameter_name
+  }
+}
