@@ -184,12 +184,13 @@ module "lambda_function" {
     DB_PASSWORD_PARAM = module.ssm_parameter.mysql_db_password_parameter_name
   }
 
-  # Point to the S3 bucket for the Lambda zip file
+  # Correct arguments for Lambda function using the S3 bucket
   s3_bucket = module.lambda_s3_bucket.bucket_name
-  s3_key    = "lambda_function.zip"
+  s3_key    = "lambda_function.zip"  # Ensure the correct S3 key
 
-
+  depends_on = [module.lambda_s3_bucket]  # Ensure the S3 bucket is created first
 }
+
 
 # Wait for Lambda to deploy
 resource "null_resource" "wait_for_lambda" {
