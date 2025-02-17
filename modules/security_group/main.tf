@@ -57,6 +57,7 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
+ 
 resource "aws_security_group" "rds_mysqldb_sg" {
   name        = "${var.resource_prefix}-rds-sg"
   description = "Allow traffic from EC2 instance to RDS"
@@ -66,8 +67,7 @@ resource "aws_security_group" "rds_mysqldb_sg" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    security_groups = [aws_security_group.ec2_sg.id]  # Allow traffic from ALB's SG
-  
+    security_groups = [aws_security_group.ec2_sg.id]  # Allow traffic from EC2's SG
   }
 
   egress {

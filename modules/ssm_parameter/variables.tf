@@ -7,3 +7,13 @@ variable "db_password" {
   description = "The MySQL database password"
   type        = string
 }
+
+variable "db_name" {
+  description = "The MySQL database name"
+  type        = string
+}
+
+variable "db_admin_user" {
+  description = "The MySQL database admin username"
+  type        = string
+}
