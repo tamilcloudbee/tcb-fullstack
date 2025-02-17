@@ -99,19 +99,29 @@ module "ssm_parameter" {
 }
 
 module "lambda_iam_role" {
-  source = "./modules/iam"
+  source = "./modules/iam"  # Path to the IAM module
 
   role_name    = "${var.resource_prefix}-lambda-role"
   policy_name  = "${var.resource_prefix}-lambda-policy"
   policy_document = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17"  # IAM policy version date
     Statement = [
       {
         Action = [
-          "ssm:GetParameter",
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "ssm:GetParameter",  # Permission to get parameters from AWS SSM Parameter Store
+          "logs:CreateLogGroup",  # Permission to create a CloudWatch log group
+          "logs:CreateLogStream",  # Permission to create a CloudWatch log stream
+          "logs:PutLogEvents",  # Permission to send log events to CloudWatch
+          "rds:DescribeDBInstances",  # Permission to describe RDS DB instances
+          "rds:Connect"  # Permission to connect to RDS (MySQL)
+        ]
+        Effect   = "Allow"
+        Resource = "*"  # Applies to all resources
+      },
+      {
+        Action = [
+          "rds:DescribeDBInstances",  # This allows you to describe your DB instances
+          "rds:Connect"  # Connect permission for RDS MySQL
         ]
         Effect   = "Allow"
         Resource = "*"
@@ -120,93 +130,5 @@ module "lambda_iam_role" {
   })
 }
 
-/*
-# Fetch the Lambda function ZIP file from the GitHub release
-data "http" "lambda_function_zip" {
-  url = "https://github.com/tamilcloudbee/tcb-mysql-rds-init/releases/tag/v1.0.0/lambda_function.zip"  # Replace with your actual GitHub release URL
-}
 
 
-module "lambda_function" {
-  source = "./modules/lambda"
-
-  function_name = "${var.resource_prefix}-rds-init"
-  runtime       = "python3.12"
-  handler       = "lambda_function.lambda_handler"
-  source_repo   = "https://github.com/tamilcloudbee/tcb-mysql-rds-init.git"
-  role_arn      =  module.lambda_iam_role.tcb_role_arn
-
-  environment_variables = {
-    DB_HOST           = module.rds.rds_db_endpoint
-    DB_NAME           = var.db_name
-    DB_USER           = var.db_admin_user
-    DB_PASSWORD_PARAM = module.ssm_parameter.mysql_db_password_parameter_name
-  }
-  # Pass the zip file and source code hash
-  # Use response_body instead of deprecated 'body'
-  zip_file         = "lambda_function.zip"
-  source_code_hash = base64sha256(file("lambda_function.zip"))
-
-}
-
-
-
-# Download the Lambda zip file and upload to S3
-# Download the Lambda zip file and upload it to S3
-resource "null_resource" "download_and_upload_lambda_zip" {
-  provisioner "local-exec" {
-    command = <<EOT
-      curl -L -o ./lambda_function.zip https://github.com/tamilcloudbee/tcb-mysql-rds-init/releases/download/v1.0.0/lambda_function.zip &&
-      aws s3 cp ./lambda_function.zip s3://${module.lambda_s3_bucket.bucket_name}/lambda_function.zip
-    EOT
-  }
-
-  depends_on = [module.lambda_s3_bucket]  # Ensure the S3 bucket is created first
-}
-
-module "lambda_function" {
-  source = "./modules/lambda"
-
-  function_name = "${var.resource_prefix}-rds-init"
-  runtime       = "python3.12"
-  handler       = "lambda_function.lambda_handler"
-  role_arn      = module.lambda_iam_role.tcb_role_arn
-
-  environment_variables = {
-    DB_HOST           = module.rds.rds_db_endpoint
-    DB_NAME           = var.db_name
-    DB_USER           = var.db_admin_user
-    DB_PASSWORD_PARAM = module.ssm_parameter.mysql_db_password_parameter_name
-  }
-  
-  zip_file = "lambda_function.zip"
-  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
-  # Correct arguments for Lambda function using the S3 bucket
-  s3_bucket = module.lambda_s3_bucket.lambda_bucket_name
-  s3_key    = "lambda_function.zip"  # Ensure the correct S3 key
-
-}
-
-
-# Wait for Lambda to deploy
-resource "null_resource" "wait_for_lambda" {
-  provisioner "local-exec" {
-    command = "sleep 60"  # Wait for 60 seconds
-  }
-
-  depends_on = [module.lambda_function]  # Ensure Lambda deployment is complete before waiting
-}
-
-# Trigger Lambda after deployment and waiting
-resource "aws_lambda_invocation" "invoke_lambda" {
-  function_name = module.lambda_function.function_name
-  input         = jsonencode({
-    "DB_HOST": module.rds.rds_db_endpoint,
-    "DB_NAME": var.db_name,
-    "DB_USER": var.db_admin_user,
-    "DB_PASSWORD_PARAM": module.ssm_parameter.mysql_db_password_parameter_name
-  })
-
-  depends_on = [null_resource.wait_for_lambda]  # Ensure Lambda is deployed and waited upon before triggering
-}
-*/
