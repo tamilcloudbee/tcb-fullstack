@@ -41,7 +41,7 @@ resource "aws_db_instance" "rds-db" {
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "${var.resource_prefix}-rds-subnet-group"
-  subnet_ids = [var.private_subnet_id_1]  # Use just one private subnet
+  subnet_ids = [var.private_subnet_id_1,var.private_subnet_id_2]  # Use just one private subnet
 
   tags = {
     Name = "${var.resource_prefix}-rds-subnet-group"

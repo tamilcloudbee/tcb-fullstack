@@ -105,6 +105,7 @@ module "rds" {
 module "rds" {
   source               = "./modules/rds"
   private_subnet_id_1  = module.vpc_a.private_subnet_1_id  # Use the same subnet as EC2
+  private_subnet_id_2  = module.vpc_a.private_subnet_2_id  # Secondary subnet for high availability
   rds_security_group_id = module.sg_a.rds_mysqldb_security_group_id
   db_name              = var.db_name
   db_admin_user        = var.db_admin_user
