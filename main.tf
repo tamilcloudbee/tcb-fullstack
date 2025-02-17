@@ -1,5 +1,12 @@
 provider "aws" {
   region = var.aws_region
+  default_tags {
+    tags = {
+      CreatedBy = "Terraform"
+      Project     = "tcb-fullstack"
+      Owner       = "tamilcloudbee"
+    }
+
 }
 
 # Fetch the hosted zone ID dynamically
