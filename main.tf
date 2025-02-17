@@ -188,7 +188,6 @@ module "lambda_function" {
   s3_bucket = module.lambda_s3_bucket.bucket_name
   s3_key    = "lambda_function.zip"  # Ensure the correct S3 key
 
-  depends_on = [module.lambda_s3_bucket]  # Ensure the S3 bucket is created first
 }
 
 
