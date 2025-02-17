@@ -9,6 +9,7 @@ provider "aws" {
   }
 }
 
+/*
 # Fetch the hosted zone ID dynamically
 data "aws_route53_zone" "selected" {
   name         = var.domain
@@ -48,6 +49,7 @@ module "route53" {
   cloudfront_hosted_zone_id = module.cloudfront.cloudfront_hosted_zone_id
 }
 
+*/
 module "vpc_a" {
   source          = "./modules/vpc"
   vpc_cidr        = var.vpc_cidr
