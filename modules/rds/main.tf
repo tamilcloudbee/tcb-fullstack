@@ -19,7 +19,7 @@ resource "aws_db_instance" "rds-db" {
   password             = var.db_admin_password
   publicly_accessible   = false 
   skip_final_snapshot  = true
-
+  multi_az               = false
   tags = {
     Name = "${var.resource_prefix}-rds"
   }
