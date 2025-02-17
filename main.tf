@@ -80,6 +80,12 @@ module "ec2_a" {
   resource_prefix     = var.resource_prefix
 }
 
+module "lambda_s3_bucket" {
+  source      = "./modules/s3"
+  bucket_name = "${var.resource_prefix}-lambda-bucket"
+}
+
+
 
 module "rds" {
   source               = "./modules/rds"
@@ -119,10 +125,12 @@ module "lambda_iam_role" {
   })
 }
 
+/*
 # Fetch the Lambda function ZIP file from the GitHub release
 data "http" "lambda_function_zip" {
   url = "https://github.com/tamilcloudbee/tcb-mysql-rds-init/releases/tag/v1.0.0/lambda_function.zip"  # Replace with your actual GitHub release URL
 }
+
 
 module "lambda_function" {
   source = "./modules/lambda"
@@ -144,4 +152,64 @@ module "lambda_function" {
   zip_file         = data.http.lambda_function_zip.response_body
   source_code_hash = base64sha256(data.http.lambda_function_zip.response_body)
 
+}
+*/
+
+
+# Download the Lambda zip file and upload to S3
+# Download the Lambda zip file and upload it to S3
+resource "null_resource" "download_and_upload_lambda_zip" {
+  provisioner "local-exec" {
+    command = <<EOT
+      curl -L -o ./lambda_function.zip https://github.com/tamilcloudbee/tcb-mysql-rds-init/releases/download/v1.0.0/lambda_function.zip &&
+      aws s3 cp ./lambda_function.zip s3://${module.lambda_s3_bucket.bucket_name}/lambda_function.zip
+    EOT
+  }
+
+  depends_on = [module.lambda_s3_bucket]  # Ensure the S3 bucket is created first
+}
+
+module "lambda_function" {
+  source = "./modules/lambda"
+
+  function_name = "${var.resource_prefix}-rds-init"
+  runtime       = "python3.12"
+  handler       = "lambda_function.lambda_handler"
+  role_arn      = module.lambda_iam_role.tcb_role_arn
+
+  environment_variables = {
+    DB_HOST           = module.rds.rds_db_endpoint
+    DB_NAME           = var.db_name
+    DB_USER           = var.db_admin_user
+    DB_PASSWORD_PARAM = module.ssm_parameter.mysql_db_password_parameter_name
+  }
+
+  # Point to the S3 bucket for the Lambda zip file
+  s3_bucket = module.lambda_s3_bucket.bucket_name
+  s3_key    = "lambda_function.zip"
+
+  depends_on = [module.rds]  # Ensure RDS is provisioned before Lambda is deployed
+
+}
+
+# Wait for Lambda to deploy
+resource "null_resource" "wait_for_lambda" {
+  provisioner "local-exec" {
+    command = "sleep 60"  # Wait for 60 seconds
+  }
+
+  depends_on = [module.lambda_function]  # Ensure Lambda deployment is complete before waiting
+}
+
+# Trigger Lambda after deployment and waiting
+resource "aws_lambda_invocation" "invoke_lambda" {
+  function_name = module.lambda_function.function_name
+  input         = jsonencode({
+    "DB_HOST": module.rds.rds_db_endpoint,
+    "DB_NAME": var.db_name,
+    "DB_USER": var.db_admin_user,
+    "DB_PASSWORD_PARAM": module.ssm_parameter.mysql_db_password_parameter_name
+  })
+
+  depends_on = [null_resource.wait_for_lambda]  # Ensure Lambda is deployed and waited upon before triggering
 }
