@@ -1,3 +1,13 @@
+provider "aws" {
+  region = var.aws_region
+}
+
+/*
+provider "github" {
+  token = var.github_token  # Required if the repository is private
+}
+*/
+
 resource "aws_lambda_function" "this" {
   function_name = var.function_name
   handler       = var.handler
@@ -8,19 +18,10 @@ resource "aws_lambda_function" "this" {
     variables = var.environment_variables
   }
 
-  source_code_hash = filebase64sha256("${path.module}/lambda_function.zip")
+  # Using the zip file directly from GitHub
+  source_code_hash = var.source_code_hash
 
-  s3_bucket = aws_s3_bucket.lambda_bucket.bucket
-  s3_key    = "lambda_function.zip"
+  # Lambda function code directly from GitHub
+  zip_file = var.zip_file
 }
 
-resource "aws_s3_bucket" "lambda_bucket" {
-  bucket = "${var.function_name}-lambda-bucket"
-}
-
-resource "aws_s3_bucket_object" "lambda_code" {
-  bucket = aws_s3_bucket.lambda_bucket.bucket
-  key    = "lambda_function.zip"
-  source = "${path.module}/lambda_function.zip"
-  etag   = filemd5("${path.module}/lambda_function.zip")
-}

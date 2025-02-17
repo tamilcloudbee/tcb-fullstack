@@ -29,3 +29,14 @@ variable "role_arn" {
   description = "ARN of the IAM role for the Lambda function"
   type        = string
 }
+
+
+variable "source_code_hash" {
+  description = "The base64-encoded SHA256 hash of the Lambda deployment package"
+  type        = string
+}
+
+variable "zip_file" {
+  description = "The Lambda deployment package in zip format"
+  type        = string
+}

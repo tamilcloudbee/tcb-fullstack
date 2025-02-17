@@ -119,6 +119,11 @@ module "lambda_iam_role" {
   })
 }
 
+# Fetch the Lambda function ZIP file from the GitHub release
+data "http" "lambda_function_zip" {
+  url = "https://github.com/tamilcloudbee/tcb-mysql-rds-init/releases/tag/v1.0.0/lambda_function.zip"  # Replace with your actual GitHub release URL
+}
+
 module "lambda_function" {
   source = "./modules/lambda"
 
