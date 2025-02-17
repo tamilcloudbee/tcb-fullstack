@@ -13,7 +13,7 @@ private_cidr_2 = "172.16.4.0/24"
 
 resource_prefix = "tcb-fullstack-app"
 
-db_name = "tcb-db"
+db_name = "tcbdb"
 db_admin_user = "tcb-admin"
 db_admin_password = "Tcb@2025"
 
