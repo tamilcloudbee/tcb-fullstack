@@ -8,7 +8,7 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 }
 
 resource "aws_db_instance" "rds-db" {
-  db_instance_identifier = "${var.resource_prefix}-rds-db"  # Add the DB Identifier
+  identifier           = "${var.resource_prefix}-rds-db"  # Add the DB Identifier
   db_name              = var.db_name
   engine               = "mysql"
   engine_version       = "8.4.4"
@@ -18,9 +18,9 @@ resource "aws_db_instance" "rds-db" {
   vpc_security_group_ids = [var.rds_security_group_id]
   username             = var.db_admin_user
   password             = var.db_admin_password
-  publicly_accessible   = false 
+  publicly_accessible  = false 
   skip_final_snapshot  = true
-  multi_az               = false
+  multi_az             = false
   db_subnet_group_name = aws_db_subnet_group.rds_subnet_group.name  # Associate the subnet group
   tags = {
     Name = "${var.resource_prefix}-rds"
