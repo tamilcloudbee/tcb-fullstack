@@ -6,7 +6,7 @@ provider "aws" {
       Project     = "tcb-fullstack"
       Owner       = "tamilcloudbee"
     }
-
+  }
 }
 
 # Fetch the hosted zone ID dynamically
