@@ -1,4 +1,4 @@
-resource "aws_iam_role" "this" {
+resource "aws_iam_role" "iam-tcb" {
   name = var.role_name
 
   assume_role_policy = jsonencode({
@@ -17,7 +17,7 @@ resource "aws_iam_role" "this" {
 
 resource "aws_iam_role_policy" "this" {
   name = var.policy_name
-  role = aws_iam_role.this.id
+  role = aws_iam_role.iam-tcb.id
 
   policy = var.policy_document
 }

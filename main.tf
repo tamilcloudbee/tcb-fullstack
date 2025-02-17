@@ -123,10 +123,10 @@ module "lambda_function" {
   source = "./modules/lambda"
 
   function_name = "${var.resource_prefix}-rds-init"
-  runtime       = "python3.8"
+  runtime       = "python3.12"
   handler       = "lambda_function.lambda_handler"
   source_repo   = "https://github.com/tamilcloudbee/tcb-mysql-rds-init.git"
-  role_arn      = module.lambda_iam_role.this.arn
+  role_arn      =  module.lambda_iam_role.tcb_role_arn
 
   environment_variables = {
     DB_HOST           = module.rds.rds_db_endpoint
