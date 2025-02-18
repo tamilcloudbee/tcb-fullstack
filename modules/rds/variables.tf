@@ -21,6 +21,7 @@ variable "private_subnet_id_1" {
   type        = string
 }
 
+
 variable "private_subnet_id_2" {
   description = "ID of the private subnet where the RDS instance will be deployed"
   type        = string
