@@ -37,8 +37,10 @@ module "cloudfront" {
 
   # Pass the new required variables
   bucket_regional_domain_name = module.s3.bucket_regional_domain_name
-  oai_iam_arn                 = module.s3.oai_iam_arn
-  oai_id                      = module.s3.oai_id
+  
+    # Conditionally pass OAI values
+  oai_iam_arn   = var.enable_oai ? module.s3.oai_iam_arn : null
+  oai_id        = var.enable_oai ? module.s3.oai_id : null
 }
 
 module "route53" {
