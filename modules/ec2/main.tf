@@ -27,13 +27,15 @@ data "aws_ami" "latest_ubuntu" {
 
 # EC2 Instance in the Private Subnet
 resource "aws_instance" "public_instance" {
-  ami           = data.aws_ami.latest_ubuntu.id
-  instance_type = var.instance_type
-  subnet_id     = var.private_subnet_id
-  key_name      = var.key_name
+  ami                         = data.aws_ami.latest_ubuntu.id
+  instance_type               = var.instance_type
+  subnet_id                   = var.private_subnet_id
+  key_name                    = var.key_name
   associate_public_ip_address = true
-  security_groups = [var.security_group_id]
-  user_data              = var.user_data  # Pass the user data here
+  security_groups             = [var.security_group_id]
+  user_data                   = var.user_data  # Pass the user data here
+  iam_instance_profile        = var.iam_instance_profile  # Pass IAM profile
+
   tags = {
     Name        = "${var.resource_prefix}-Private-Instance-FastAPI"
     Environment = var.env_name

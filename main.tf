@@ -9,7 +9,7 @@ provider "aws" {
   }
 }
 
-
+/*
 # Fetch the hosted zone ID dynamically
 data "aws_route53_zone" "selected" {
   name         = var.domain
@@ -49,6 +49,7 @@ module "route53" {
   cloudfront_hosted_zone_id = module.cloudfront.cloudfront_hosted_zone_id
 }
 
+*/
 
 module "vpc_a" {
   source          = "./modules/vpc"
@@ -86,6 +87,7 @@ module "ec2_a" {
   key_name            = var.key_name
   env_name            = "dev_a"
   security_group_id   = module.sg_a.ec2_security_group_id
+  iam_instance_profile = module.lambda_iam_role.ec2_instance_profile  # Pass IAM profile
   resource_prefix     = var.resource_prefix
 }
 

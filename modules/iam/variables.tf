@@ -12,3 +12,8 @@ variable "policy_document" {
   description = "Policy document for the IAM role"
   type        = string
 }
+
+variable "resource_prefix" {
+  description = "Prefix for resource naming"
+  type        = string
+}
