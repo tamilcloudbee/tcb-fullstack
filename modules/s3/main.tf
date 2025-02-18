@@ -44,7 +44,7 @@ resource "aws_s3_bucket_website_configuration" "static_site" {
   }
 }
 
-resource "aws_s3_bucket_object" "lambda_zip" {
+resource "aws_s3_object" "lambda_zip" {
   count  = var.upload_lambda_zip ? 1 : 0  # Only execute for the last S3 bucket
   bucket = aws_s3_bucket.static_site.id
   key    = "lambda_function.zip"
