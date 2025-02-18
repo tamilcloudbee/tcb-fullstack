@@ -9,7 +9,7 @@ provider "aws" {
   }
 }
 
-/*
+
 # Fetch the hosted zone ID dynamically
 data "aws_route53_zone" "selected" {
   name         = var.domain
@@ -49,7 +49,7 @@ module "route53" {
   cloudfront_hosted_zone_id = module.cloudfront.cloudfront_hosted_zone_id
 }
 
-*/
+
 module "vpc_a" {
   source          = "./modules/vpc"
   vpc_cidr        = var.vpc_cidr
@@ -89,18 +89,7 @@ module "ec2_a" {
   resource_prefix     = var.resource_prefix
 }
 
-/*
-module "rds" {
-  source               = "./modules/rds"
-  private_subnet_id_1  = module.vpc_a.private_subnet_1_id  # Use the same subnet as EC2
-  private_subnet_id_2  = module.vpc_a.private_subnet_2_id  # Secondary subnet for high availability
-  rds_security_group_id = module.sg_a.rds_mysqldb_security_group_id
-  db_name              = var.db_name
-  db_admin_user        = var.db_admin_user
-  db_admin_password    = var.db_admin_password
-  resource_prefix      = var.resource_prefix
-}
-*/
+
 
 module "rds" {
   source               = "./modules/rds"
