@@ -163,5 +163,5 @@ module "upload_zip_to_s3_bucket" {
   source            = "./modules/s3"
   bucket_name       = module.s3_tcb_rds_init.bucket_name
   upload_lambda_zip = true  # Enable only for the last bucket
-  lambda_zip_path   = "/home/cosmic/jenkins-jobs/workspace/TCB-PROD-FS-INFRA/lambda_function.zip"
+  lambda_zip_path   = "lambda_function.zip"
 }
