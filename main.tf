@@ -150,5 +150,16 @@ module "lambda_iam_role" {
   })
 }
 
+module "s3_tcb_rds_init" {
+  source      = "./modules/s3"
+  bucket_name = "tcb-rds-init-s3"
+  enable_oai  = false  # Disable OAI for this bucket
+}
 
 
+module "upload_zip_to_s3_bucket" {
+  source            = "./modules/s3"
+  bucket_name       = module.s3_tcb_rds_init.bucket_name
+  upload_lambda_zip = true  # Enable only for the last bucket
+  lambda_zip_path   = "lambda_function.zip"
+}
