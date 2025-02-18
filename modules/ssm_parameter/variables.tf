@@ -17,3 +17,8 @@ variable "db_admin_user" {
   description = "The MySQL database admin username"
   type        = string
 }
+
+variable "rds_endpoint" {
+  description = "The MySQL database RDS endpoint"
+  type        = string
+}
