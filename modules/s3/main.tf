@@ -13,12 +13,12 @@ resource "aws_s3_bucket_public_access_block" "block_public" {
 }
 
 resource "aws_cloudfront_origin_access_identity" "oai" {
-  count   = var.enable_oai ? 1 : 0
+  count   = var.enable_oai ? 1 : 0  # Create OAI only if enabled
   comment = "CloudFront OAI for ${var.bucket_name}"
 }
 
 resource "aws_s3_bucket_policy" "allow_cloudfront" {
-  count   = var.enable_oai ? 1 : 0
+  count   = var.enable_oai ? 1 : 0  # Apply policy only if OAI is enabled
   bucket = aws_s3_bucket.static_site.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -27,7 +27,7 @@ resource "aws_s3_bucket_policy" "allow_cloudfront" {
         Sid    = "AllowCloudFrontServicePrincipalReadOnly"
         Effect = "Allow"
         Principal = {
-          AWS = aws_cloudfront_origin_access_identity.oai.iam_arn
+          AWS = aws_cloudfront_origin_access_identity.oai[0].iam_arn
         }
         Action   = "s3:GetObject"
         Resource = "${aws_s3_bucket.static_site.arn}/*"
@@ -37,7 +37,7 @@ resource "aws_s3_bucket_policy" "allow_cloudfront" {
 }
 
 resource "aws_s3_bucket_website_configuration" "static_site" {
-  count   = var.enable_oai ? 1 : 0
+  count   = var.enable_oai ? 1 : 0  # Apply website configuration only if OAI is enabled
   bucket = aws_s3_bucket.static_site.id
   index_document {
     suffix = "index.html"
@@ -53,3 +53,4 @@ resource "aws_s3_bucket_object" "lambda_zip" {
 
   etag = filemd5(var.lambda_zip_path) # Ensures re-upload only if file changes
 }
+
