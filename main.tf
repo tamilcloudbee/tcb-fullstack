@@ -117,10 +117,10 @@ module "ssm_parameter" {
 }
 
 module "lambda_iam_role" {
-  source = "./modules/iam"  # Path to the IAM module
-
-  role_name    = "${var.resource_prefix}-lambda-role"
-  policy_name  = "${var.resource_prefix}-lambda-policy"
+  source          = "./modules/iam"  # Path to the IAM module
+  resource_prefix = var.resource_prefix 
+  role_name       = "${var.resource_prefix}-lambda-role"
+  policy_name     = "${var.resource_prefix}-lambda-policy"
   policy_document = jsonencode({
     Version = "2012-10-17"  # IAM policy version date
     Statement = [
