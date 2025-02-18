@@ -31,3 +31,14 @@ resource "aws_ssm_parameter" "mysql_db_user" {
     Name = "${var.resource_prefix}-mysql-db-user"
   }
 }
+
+resource "aws_ssm_parameter" "rds_endpoint" {
+  name  = "${var.resource_prefix}-rds-endpoint"
+  type  = "SecureString"
+  value = var.rds_endpoint
+
+  tags = {
+    Name        = "${var.resource_prefix}-rds-endpoint"
+    Environment = var.resource_prefix
+  }
+}

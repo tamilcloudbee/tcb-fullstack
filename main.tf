@@ -92,7 +92,7 @@ module "ec2_a" {
 }
 
 
-/*
+
 module "rds" {
   source               = "./modules/rds"
   private_subnet_id_1  = module.vpc_a.private_subnet_1_id  # Use the same subnet as EC2
@@ -103,17 +103,19 @@ module "rds" {
   db_admin_password    = var.db_admin_password
   resource_prefix      = var.resource_prefix
 }
-*/
+
 
 
 module "ssm_parameter" {
-  source        = "./modules/ssm_parameter"
-  db_password   = var.db_admin_password
+  source          = "./modules/ssm_parameter"
+  db_password     = var.db_admin_password
   resource_prefix = var.resource_prefix
 
   # Add new parameters for RDS database name and username
-  db_name      = var.db_name
-  db_admin_user = var.db_admin_user
+  db_name         = var.db_name
+  db_admin_user   = var.db_admin_user
+  rds_endpoint    = module.rds.rds_db_endpoint
+
 }
 
 module "lambda_iam_role" {
