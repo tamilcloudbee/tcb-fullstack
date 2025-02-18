@@ -92,7 +92,7 @@ module "ec2_a" {
 }
 
 
-
+/*
 module "rds" {
   source               = "./modules/rds"
   private_subnet_id_1  = module.vpc_a.private_subnet_1_id  # Use the same subnet as EC2
@@ -103,7 +103,7 @@ module "rds" {
   db_admin_password    = var.db_admin_password
   resource_prefix      = var.resource_prefix
 }
-
+*/
 
 
 module "ssm_parameter" {
