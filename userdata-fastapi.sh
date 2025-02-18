@@ -44,14 +44,16 @@ python3 -m venv venv
 source venv/bin/activate
 
 # Install FastAPI, Gunicorn, Uvicorn, pymysql, python-multipart in the virtual environment
-echo "Installing FastAPI, Gunicorn, Uvicorn, pymysql, and python-multipart..."
-pip install fastapi pymysql gunicorn uvicorn python-multipart
+echo "Installing FastAPI, Gunicorn, Uvicorn, pymysql, boto3 and python-multipart..."
+pip install fastapi pymysql gunicorn uvicorn python-multipart boto3
 
 # Create FastAPI app with 'course' field handling
 cat <<EOF > /var/www/fastapi/main.py
 from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
 import pymysql
+import os
+import boto3
 
 app = FastAPI()
 
@@ -64,6 +66,53 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
+
+# Fetch RDS credentials and endpoint from AWS SSM Parameter Store
+ssm = boto3.client("ssm", region_name="us-east-1")  # Replace with your AWS region
+
+'''
+# Fetch parameters from SSM securely
+db_name_param = ssm.get_parameter(Name="tcb-fullstack-app-mysql-db-name", WithDecryption=True)
+db_password_param = ssm.get_parameter(Name="tcb-fullstack-app-mysql-db-password", WithDecryption=True)
+db_user_param = ssm.get_parameter(Name="tcb-fullstack-app-mysql-db-user", WithDecryption=True)
+rds_endpoint_param = ssm.get_parameter(Name="tcb-fullstack-app-rds-endpoint", WithDecryption=True)
+
+# Extract values from the parameters
+DB_NAME = db_name_param["Parameter"]["Value"]
+DB_USER = db_user_param["Parameter"]["Value"]
+DB_PASSWORD = db_password_param["Parameter"]["Value"]
+RDS_ENDPOINT = rds_endpoint_param["Parameter"]["Value"]
+
+'''
+
+try:
+    db_name_param = ssm.get_parameter(Name="tcb-fullstack-app-mysql-db-name", WithDecryption=True)
+    db_password_param = ssm.get_parameter(Name="tcb-fullstack-app-mysql-db-password", WithDecryption=True)
+    db_user_param = ssm.get_parameter(Name="tcb-fullstack-app-mysql-db-user", WithDecryption=True)
+    rds_endpoint_param = ssm.get_parameter(Name="tcb-fullstack-app-rds-endpoint", WithDecryption=True)
+
+    DB_NAME = db_name_param["Parameter"]["Value"]
+    DB_USER = db_user_param["Parameter"]["Value"]
+    DB_PASSWORD = db_password_param["Parameter"]["Value"]
+    RDS_ENDPOINT = rds_endpoint_param["Parameter"]["Value"]
+except ssm.exceptions.ParameterNotFound as e:
+    print(f"Parameter not found: {e}")
+    raise Exception("One or more required SSM parameters are missing.")
+except Exception as e:
+    print(f"Error retrieving parameters: {e}")
+    raise Exception("Error retrieving parameters from SSM.")
+
+# Database connection function
+def get_db_connection():
+    return pymysql.connect(
+        host=RDS_ENDPOINT,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_NAME
+    )
+
+
+'''
 def get_db_connection():
     return pymysql.connect(
         host="localhost",
@@ -71,7 +120,7 @@ def get_db_connection():
         password="Tcb@2025",
         database="tcb_db"
     )
-
+'''
 @app.post("/api/enquiry-register/")
 async def submit_form(
     name: str = Form(...), 
